@@ -35,7 +35,7 @@ valids = full_branches[0:6]
 xs     = full_branches[6:12]
 ys     = full_branches[12:18]
 
-print("Selected branches: \n" + "\n".join(full_branches))
+print("Selected branches: \n" + "\n\t".join(full_branches))
 
 # Filter and define output branches
 filter_code = """({0}.valid + {1}.valid + {2}.valid ) >= 2 &&
