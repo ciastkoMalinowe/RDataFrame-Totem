@@ -4,9 +4,14 @@ import glob
 RDF = ROOT.ROOT.RDataFrame
 
 # Extracted from: DS1/block1/input_files.h
+source_file       = "input_files_DS1.txt"
 input_ntuple_name = "TotemNtuple"
 prefix            = "/eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
-input_files       = prefix + "Totem*" # Expands to http://cern.ch/go/RT7v
+input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
+
+# Convert to PyROOT vector
+vec_input_files = ROOT.vector('string')()
+[vec_input_files.push_back(f) for f in input_files]
 
 # Branches clasified by diagonal
 diagonals = {
@@ -46,7 +51,7 @@ print("Filter code: \n" + filter_code)
 
 # Input tree
 treename= "TotemNtuple"
-rdf = RDF(treename, input_files)
+rdf = RDF(treename, vec_input_files)
 
 # Output tree, file and branches
 outTreeName = "distilled"
