@@ -16,14 +16,14 @@ vec_input_files = ROOT.vector('string')()
 # Branches clasified by diagonal
 diagonals = {
     # return a tuple: ([left] verticals in 45, [right] verticals in 56))
-    "d45b_56t"  : (["track_rp_5",   "track_rp_21",  "track_rp_25"],
+    "d45b_56t"  : (["track_rp_5", "track_rp_21", "track_rp_25"],
                    ["track_rp_104", "track_rp_120", "track_rp_124"]),
-    "ad45b_56b" : (["track_rp_5",   "track_rp_21",  "track_rp_25"],
-                   ["track_rp_104", "track_rp_120", "track_rp_124"]),
-    "d45t_56b"  : (["track_rp_4",   "track_rp_20",  "track_rp_24"],
+    "ad45b_56b" : (["track_rp_5", "track_rp_21", "track_rp_25"],
                    ["track_rp_105", "track_rp_121", "track_rp_125"]),
-    "ad45t_56t" : (["track_rp_4",   "track_rp_20",  "track_rp_24"],
-                   ["track_rp_105", "track_rp_121", "track_rp_125"])
+    "d45t_56b"  : (["track_rp_4", "track_rp_20", "track_rp_24"],
+                   ["track_rp_105", "track_rp_121", "track_rp_125"]),
+    "ad45t_56t" : (["track_rp_4", "track_rp_20", "track_rp_24"],
+                   ["track_rp_104", "track_rp_120", "track_rp_124"])
 }
 
 # Columns per branch
