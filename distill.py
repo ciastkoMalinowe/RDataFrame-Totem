@@ -33,7 +33,7 @@ rp_left, rp_right = diagonals[selected_diagonal]
 # Extracted from: DS1/block1/input_files.h
 source_file       = "input_files_DS1.txt"
 input_ntuple_name = "TotemNtuple"
-prefix            = "/eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
+prefix            = "/home/data/4495/"
 input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
 
 # Convert to PyROOT vector
@@ -46,7 +46,7 @@ attributes = ['valid', 'x', 'y']
 full_branches = ["{}.{}".format(c,a) for a in attributes for c in rp_left+rp_right ]
 
 # Split left and right branch on valid, x and y
-valids = full_branches[0:6]
+valids = [ "(unsigned int) {}".format(v) for v in full_branches[0:6]]
 xs     = full_branches[6:12]
 ys     = full_branches[12:18]
 
@@ -65,7 +65,7 @@ rdf = RDF(treename, vec_input_files)
 
 # Output tree, file and branches
 outTreeName = "distilled"
-outFileName = "distill_DS1_{}_new.root".format(selected_diagonal)
+outFileName = "test_distill_DS1_{}_new.root".format(selected_diagonal)
 branchList  = ["v_L_1_F", "v_L_2_N", "v_L_2_F", "v_R_1_F", "v_R_2_N", "v_R_2_F",
                "x_L_1_F", "x_L_2_N", "x_L_2_F", "x_R_1_F", "x_R_2_N", "x_R_2_F",
                "y_L_1_F", "y_L_2_N", "y_L_2_F", "y_R_1_F", "y_R_2_N", "y_R_2_F",
@@ -101,8 +101,8 @@ r = rdf.Filter(filter_code)  \
        .Define("y_R_1_F", ys[3]) \
        .Define("y_R_2_N", ys[4]) \
        .Define("y_R_2_F", ys[5]) \
-       .Define("timestamp",    "event_info.timestamp - 1444860000") \
-       .Define("run_num",      "event_info.run_no")                 \
+       .Define("timestamp",    "(unsigned int) (event_info.timestamp - 1444860000)") \
+       .Define("run_num",      "(unsigned int) event_info.run_no")                 \
        .Define("bunch_num",    "trigger_data.bunch_num")            \
        .Define("event_num",    "trigger_data.event_num")            \
        .Define("trigger_num",  "trigger_data.trigger_num")          \
