@@ -90,10 +90,11 @@ r = rdf.Filter(filter_code)  \
        .Define("y_R_1_F", ys[3]) \
        .Define("y_R_2_N", ys[4]) \
        .Define("y_R_2_F", ys[5]) \
-       .Define("run_num",      "event_info.run_no")             \
-       .Define("bunch_num",    "trigger_data.bunch_num")        \
-       .Define("event_num",    "trigger_data.event_num")        \
-       .Define("trigger_num",  "trigger_data.trigger_num")      \
+       .Define("timestamp",    "event_info.timestamp - 1444860000") \
+       .Define("run_num",      "event_info.run_no")                 \
+       .Define("bunch_num",    "trigger_data.bunch_num")            \
+       .Define("event_num",    "trigger_data.event_num")            \
+       .Define("trigger_num",  "trigger_data.trigger_num")          \
        .Define("trigger_bits", "trigger_data.input_status_bits")
 
 # All above actions are not executed at the moment they are called,
