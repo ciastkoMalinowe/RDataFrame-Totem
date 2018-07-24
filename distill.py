@@ -1,17 +1,8 @@
 import ROOT
 import glob
+import sys
 
 RDF = ROOT.ROOT.RDataFrame
-
-# Extracted from: DS1/block1/input_files.h
-source_file       = "input_files_DS1.txt"
-input_ntuple_name = "TotemNtuple"
-prefix            = "/eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
-input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
-
-# Convert to PyROOT vector
-vec_input_files = ROOT.vector('string')()
-[vec_input_files.push_back(f) for f in input_files]
 
 # Branches clasified by diagonal
 diagonals = {
@@ -26,12 +17,31 @@ diagonals = {
                    ["track_rp_104", "track_rp_120", "track_rp_124"])
 }
 
-# Columns per branch
-attributes = ['valid', 'x', 'y']
+if len(sys.argv) < 2:
+    print('Usage: python distill.py <diagonal>')
+    sys.exit(1)  # no diagonal specified
 
 # Select branches
-selected_diagonal = "d45b_56t"
+selected_diagonal = sys.argv[1]
+if selected_diagonal not in diagonals.keys():
+    print('Invalid diagonal: %s' % selected_diagonal)
+    print('Choose between:   %s' % diagonals.keys())
+    sys.exit(1)
+
 rp_left, rp_right = diagonals[selected_diagonal]
+
+# Extracted from: DS1/block1/input_files.h
+source_file       = "input_files_DS1.txt"
+input_ntuple_name = "TotemNtuple"
+prefix            = "/eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
+input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
+
+# Convert to PyROOT vector
+vec_input_files = ROOT.vector('string')()
+[vec_input_files.push_back(f) for f in input_files]
+
+# Columns per branch
+attributes = ['valid', 'x', 'y']
 
 full_branches = ["{}.{}".format(c,a) for a in attributes for c in rp_left+rp_right ]
 
