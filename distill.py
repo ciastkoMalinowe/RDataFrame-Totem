@@ -18,8 +18,14 @@ diagonals = {
 }
 
 if len(sys.argv) < 2:
-    print('Usage: python distill.py <diagonal>')
+    print('Usage: python distill.py <diagonal> [threads number]')
     sys.exit(1)  # no diagonal specified
+
+if len(sys.argv) == 3:
+    if int(sys.argv[2]) < 1:
+        print('Threads number should be > 0')
+        sys.exit(1)  # wrong threads number
+    ROOT.ROOT.EnableImplicitMT(int(sys.argv[2]))
 
 # Select branches
 selected_diagonal = sys.argv[1]
