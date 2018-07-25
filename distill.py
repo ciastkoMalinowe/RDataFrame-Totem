@@ -39,7 +39,7 @@ rp_left, rp_right = diagonals[selected_diagonal]
 # Extracted from: DS1/block1/input_files.h
 source_file       = "input_files_DS1.txt"
 input_ntuple_name = "TotemNtuple"
-prefix            = "/eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
+prefix            = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
 input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
 
 # Convert to PyROOT vector
