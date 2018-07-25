@@ -39,7 +39,7 @@ rp_left, rp_right = diagonals[selected_diagonal]
 # Extracted from: DS1/block1/input_files.h
 source_file       = "input_files_DS1.txt"
 input_ntuple_name = "TotemNtuple"
-prefix            = "/home/data/4495/"
+prefix            = "/eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
 input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
 
 # Convert to PyROOT vector
@@ -71,7 +71,7 @@ rdf = RDF(treename, vec_input_files)
 
 # Output tree, file and branches
 outTreeName = "distilled"
-outFileName = "test_distill_DS1_{}_new.root".format(selected_diagonal)
+outFileName = "distill_DS1_{}_new.root".format(selected_diagonal)
 branchList  = ["v_L_1_F", "v_L_2_N", "v_L_2_F", "v_R_1_F", "v_R_2_N", "v_R_2_F",
                "x_L_1_F", "x_L_2_N", "x_L_2_F", "x_R_1_F", "x_R_2_N", "x_R_2_F",
                "y_L_1_F", "y_L_2_N", "y_L_2_F", "y_R_1_F", "y_R_2_N", "y_R_2_F",
