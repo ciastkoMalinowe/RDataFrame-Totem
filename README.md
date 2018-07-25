@@ -48,8 +48,9 @@ git clone https://github.com/JavierCVilla/RDataFrame-Totem.git
 3. Run the code:
 
 ```
-python distill.py
-```
+python distill.py <diagonal> [threads number]
+```  
+Valid diagonals: d45b_56t, d45t_56b, ad45b_56b, ad45t_56t
 
 ### Using HelixNebula
 

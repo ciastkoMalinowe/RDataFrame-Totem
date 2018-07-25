@@ -18,8 +18,14 @@ diagonals = {
 }
 
 if len(sys.argv) < 2:
-    print('Usage: python distill.py <diagonal>')
+    print('Usage: python distill.py <diagonal> [threads number]')
     sys.exit(1)  # no diagonal specified
+
+if len(sys.argv) == 3:
+    if int(sys.argv[2]) < 1:
+        print('Threads number should be > 0')
+        sys.exit(1)  # wrong threads number
+    ROOT.ROOT.EnableImplicitMT(int(sys.argv[2]))
 
 # Select branches
 selected_diagonal = sys.argv[1]
@@ -33,7 +39,7 @@ rp_left, rp_right = diagonals[selected_diagonal]
 # Extracted from: DS1/block1/input_files.h
 source_file       = "input_files_DS1.txt"
 input_ntuple_name = "TotemNtuple"
-prefix            = "/eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
+prefix            = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
 input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
 
 # Convert to PyROOT vector
@@ -46,7 +52,7 @@ attributes = ['valid', 'x', 'y']
 full_branches = ["{}.{}".format(c,a) for a in attributes for c in rp_left+rp_right ]
 
 # Split left and right branch on valid, x and y
-valids = full_branches[0:6]
+valids = [ "(unsigned int) {}".format(v) for v in full_branches[0:6]]
 xs     = full_branches[6:12]
 ys     = full_branches[12:18]
 
@@ -101,8 +107,8 @@ r = rdf.Filter(filter_code)  \
        .Define("y_R_1_F", ys[3]) \
        .Define("y_R_2_N", ys[4]) \
        .Define("y_R_2_F", ys[5]) \
-       .Define("timestamp",    "event_info.timestamp - 1444860000") \
-       .Define("run_num",      "event_info.run_no")                 \
+       .Define("timestamp",    "(unsigned int) (event_info.timestamp - 1444860000)") \
+       .Define("run_num",      "(unsigned int) event_info.run_no")                 \
        .Define("bunch_num",    "trigger_data.bunch_num")            \
        .Define("event_num",    "trigger_data.event_num")            \
        .Define("trigger_num",  "trigger_data.trigger_num")          \
