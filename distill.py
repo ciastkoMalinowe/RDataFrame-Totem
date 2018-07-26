@@ -75,9 +75,12 @@ rdf = RDF(treename, vec_input_files)
 # Output tree, file and branches
 outTreeName = "distilled"
 outFileName = "distill_DS1_{}_{}_new.root".format(threads_description, selected_diagonal)
-branchList  = ["v_L_1_F", "v_L_2_N", "v_L_2_F", "v_R_1_F", "v_R_2_N", "v_R_2_F",
-               "x_L_1_F", "x_L_2_N", "x_L_2_F", "x_R_1_F", "x_R_2_N", "x_R_2_F",
-               "y_L_1_F", "y_L_2_N", "y_L_2_F", "y_R_1_F", "y_R_2_N", "y_R_2_F",
+branchList  = ["v_L_1_F", "x_L_1_F", "y_L_1_F",
+               "v_L_2_N", "x_L_2_N", "y_L_2_N",
+               "v_L_2_F", "x_L_2_F", "y_L_2_F",
+               "v_R_1_F", "x_R_1_F", "y_R_1_F",
+               "v_R_2_N", "x_R_2_N", "y_R_2_N",
+               "v_R_2_F", "x_R_2_F", "y_R_2_F",
                "timestamp",
                "run_num",
                "bunch_num",
@@ -93,22 +96,22 @@ vec_outbranchlist = ROOT.vector('string')()
 # Filter and define output branches
 r = rdf.Filter(filter_code)  \
        .Define("v_L_1_F", valids[0]) \
-       .Define("v_L_2_N", valids[1]) \
-       .Define("v_L_2_F", valids[2]) \
-       .Define("v_R_1_F", valids[3]) \
-       .Define("v_R_2_N", valids[4]) \
-       .Define("v_R_2_F", valids[5]) \
        .Define("x_L_1_F", xs[0]) \
-       .Define("x_L_2_N", xs[1]) \
-       .Define("x_L_2_F", xs[2]) \
-       .Define("x_R_1_F", xs[3]) \
-       .Define("x_R_2_N", xs[4]) \
-       .Define("x_R_2_F", xs[5]) \
        .Define("y_L_1_F", ys[0]) \
+       .Define("v_L_2_N", valids[1]) \
+       .Define("x_L_2_N", xs[1]) \
        .Define("y_L_2_N", ys[1]) \
+       .Define("v_L_2_F", valids[2]) \
+       .Define("x_L_2_F", xs[2]) \
        .Define("y_L_2_F", ys[2]) \
+       .Define("v_R_1_F", valids[3]) \
+       .Define("x_R_1_F", xs[3]) \
        .Define("y_R_1_F", ys[3]) \
+       .Define("v_R_2_N", valids[4]) \
+       .Define("x_R_2_N", xs[4]) \
        .Define("y_R_2_N", ys[4]) \
+       .Define("v_R_2_F", valids[5]) \
+       .Define("x_R_2_F", xs[5]) \
        .Define("y_R_2_F", ys[5]) \
        .Define("timestamp",    "(unsigned int) (event_info.timestamp - 1444860000)") \
        .Define("run_num",      "(unsigned int) event_info.run_no")                 \
