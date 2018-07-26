@@ -17,32 +17,48 @@ diagonals = {
                    ["track_rp_104", "track_rp_120", "track_rp_124"])
 }
 
+DS = {
+    'DS1'   : '4495', 
+    'DS2'   : '4496', 
+    'DS3'   : '4499', 
+    'DS4'   : '4505', 
+    'DS5'   : '4509', 
+    'DS6'   : '4510', 
+    'DS7'   : '4511'
+}
+
 threads_description = "no_MT"
 
-if len(sys.argv) < 2:
-    print('Usage: python distill.py <diagonal> [threads number]')
+if len(sys.argv) < 3:
+    print('Usage: python distill.py <diagonal> <DS> [threads number]')
     sys.exit(1)  # no diagonal specified
 
-if len(sys.argv) == 3:
+if len(sys.argv) == 4:
     if int(sys.argv[2]) < 1:
         print('Threads number should be > 0')
         sys.exit(1)  # wrong threads number
-    ROOT.ROOT.EnableImplicitMT(int(sys.argv[2]))
-    threads_description = "threads_" + sys.argv[2]
+    ROOT.ROOT.EnableImplicitMT(int(sys.argv[3]))
+    threads_description = "threads_" + sys.argv[3]
 
 # Select branches
 selected_diagonal = sys.argv[1]
+selected_DS = sys.argv[2]
 if selected_diagonal not in diagonals.keys():
     print('Invalid diagonal: %s' % selected_diagonal)
     print('Choose between:   %s' % diagonals.keys())
     sys.exit(1)
 
+if selected_DS not in DS.keys():
+    print('DS not available: %s' % selected_DS)
+    print('Choose between: %s' % DS.keys())
+    sys.exit(1)
+
 rp_left, rp_right = diagonals[selected_diagonal]
 
 # Extracted from: DS1/block1/input_files.h
-source_file       = "input_files_DS1.txt"
+source_file       = "input_files_{}.txt".format(selected_DS)
 input_ntuple_name = "TotemNtuple"
-prefix            = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
+prefix            = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/{}/".format(DS[selected_DS])
 input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
 
 # Convert to PyROOT vector
@@ -74,7 +90,7 @@ rdf = RDF(treename, vec_input_files)
 
 # Output tree, file and branches
 outTreeName = "distilled"
-outFileName = "distill_DS1_{}_{}_new.root".format(threads_description, selected_diagonal)
+outFileName = "distill_{}_{}_{}_new.root".format(selected_DS, threads_description, selected_diagonal)
 branchList  = ["v_L_1_F", "x_L_1_F", "y_L_1_F",
                "v_L_2_N", "x_L_2_N", "y_L_2_N",
                "v_L_2_F", "x_L_2_F", "y_L_2_F",
