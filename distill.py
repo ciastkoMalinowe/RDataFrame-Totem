@@ -21,10 +21,12 @@ if len(sys.argv) < 2:
     print('Usage: python distill.py <diagonal> [threads number]')
     sys.exit(1)  # no diagonal specified
 
+number_threads = 0
 if len(sys.argv) == 3:
     if int(sys.argv[2]) < 1:
         print('Threads number should be > 0')
         sys.exit(1)  # wrong threads number
+    number_threads = sys.argv[2]
     ROOT.ROOT.EnableImplicitMT(int(sys.argv[2]))
 
 # Select branches
@@ -71,7 +73,7 @@ rdf = RDF(treename, vec_input_files)
 
 # Output tree, file and branches
 outTreeName = "distilled"
-outFileName = "distill_DS1_{}_new.root".format(selected_diagonal)
+outFileName = "distill_DS1_{}_th{}.root".format(selected_diagonal, number_threads)
 branchList  = ["v_L_1_F", "v_L_2_N", "v_L_2_F", "v_R_1_F", "v_R_2_N", "v_R_2_F",
                "x_L_1_F", "x_L_2_N", "x_L_2_F", "x_R_1_F", "x_R_2_N", "x_R_2_F",
                "y_L_1_F", "y_L_2_N", "y_L_2_F", "y_R_1_F", "y_R_2_N", "y_R_2_F",
