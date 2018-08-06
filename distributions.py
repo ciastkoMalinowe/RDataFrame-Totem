@@ -340,7 +340,9 @@ r4 = r3.Define("k_th_x_R",        "kinematics.th_x_R") \
        .Define("k_th_y_R_diffNF", "kinematics.th_y_R_F - kinematics.th_y_R_N") \
        .Define("k_vtx_x_diffLR",  "kinematics.vtx_x_R - kinematics.vtx_x_L") \
        .Define("k_vtx_y_diffLR",  "kinematics.vtx_y_R - kinematics.vtx_y_L") \
-       .Define("k_t",             "kinematics.t")
+       .Define("k_t",             "kinematics.t")                            \
+       .Define("k_th",            "kinematics.th")                           \
+       .Define("k_phi",           "kinematics.phi")
 
 # Line 906
 # cut evaluation
@@ -726,7 +728,7 @@ h_th_y_vs_th_x_after = f5.Histo2D(model, "k_th_x", "k_th_y", "div_corr");
 
 # Line 1435
 model = ROOT.RDF.TH2DModel("h_th_vs_phi_after", ";#phi;#theta", 50, -M_PI, +M_PI, 50, 150E-6, 550E-6);
-h_th_vs_phi_after = f5.Histo2D(model, "k_th_x", "k_th_y", "div_corr");
+h_th_vs_phi_after = f5.Histo2D(model, "k_phi", "k_th", "div_corr");
 
 # Line 1441
 # apply normalization
