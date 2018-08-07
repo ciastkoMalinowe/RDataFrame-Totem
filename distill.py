@@ -17,31 +17,48 @@ diagonals = {
                    ["track_rp_104", "track_rp_120", "track_rp_124"])
 }
 
-if len(sys.argv) < 2:
-    print('Usage: python distill.py <diagonal> [threads number]')
+DS = {
+    'DS1'   : '4495', 
+    'DS2'   : '4496', 
+    'DS3'   : '4499', 
+    'DS4'   : '4505', 
+    'DS5'   : '4509', 
+    'DS6'   : '4510', 
+    'DS7'   : '4511'
+}
+
+threads_description = "no_MT"
+
+if len(sys.argv) < 3:
+    print('Usage: python distill.py <diagonal> <DS> [threads number]')
     sys.exit(1)  # no diagonal specified
 
-number_threads = 0
-if len(sys.argv) == 3:
+if len(sys.argv) == 4:
     if int(sys.argv[2]) < 1:
         print('Threads number should be > 0')
         sys.exit(1)  # wrong threads number
-    number_threads = sys.argv[2]
-    ROOT.ROOT.EnableImplicitMT(int(sys.argv[2]))
+    ROOT.ROOT.EnableImplicitMT(int(sys.argv[3]))
+    threads_description = "threads_" + sys.argv[3]
 
 # Select branches
 selected_diagonal = sys.argv[1]
+selected_DS = sys.argv[2]
 if selected_diagonal not in diagonals.keys():
     print('Invalid diagonal: %s' % selected_diagonal)
     print('Choose between:   %s' % diagonals.keys())
     sys.exit(1)
 
+if selected_DS not in DS.keys():
+    print('DS not available: %s' % selected_DS)
+    print('Choose between: %s' % DS.keys())
+    sys.exit(1)
+
 rp_left, rp_right = diagonals[selected_diagonal]
 
 # Extracted from: DS1/block1/input_files.h
-source_file       = "input_files_DS1.txt"
+source_file       = "input_files_{}.txt".format(selected_DS)
 input_ntuple_name = "TotemNtuple"
-prefix            = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/4495/"
+prefix            = "root://eostotem.cern.ch//eos/totem/data/cmstotem/2015/90m/Totem/Ntuple/version2/{}/".format(DS[selected_DS])
 input_files       = [prefix + line.rstrip('\n') for line in open(source_file)]
 
 # Convert to PyROOT vector
@@ -73,10 +90,13 @@ rdf = RDF(treename, vec_input_files)
 
 # Output tree, file and branches
 outTreeName = "distilled"
-outFileName = "distill_DS1_{}_th{}.root".format(selected_diagonal, number_threads)
-branchList  = ["v_L_1_F", "v_L_2_N", "v_L_2_F", "v_R_1_F", "v_R_2_N", "v_R_2_F",
-               "x_L_1_F", "x_L_2_N", "x_L_2_F", "x_R_1_F", "x_R_2_N", "x_R_2_F",
-               "y_L_1_F", "y_L_2_N", "y_L_2_F", "y_R_1_F", "y_R_2_N", "y_R_2_F",
+outFileName = "distill_{}_{}_{}_new.root".format(selected_DS, threads_description, selected_diagonal)
+branchList  = ["v_L_1_F", "x_L_1_F", "y_L_1_F",
+               "v_L_2_N", "x_L_2_N", "y_L_2_N",
+               "v_L_2_F", "x_L_2_F", "y_L_2_F",
+               "v_R_1_F", "x_R_1_F", "y_R_1_F",
+               "v_R_2_N", "x_R_2_N", "y_R_2_N",
+               "v_R_2_F", "x_R_2_F", "y_R_2_F",
                "timestamp",
                "run_num",
                "bunch_num",
@@ -92,22 +112,22 @@ vec_outbranchlist = ROOT.vector('string')()
 # Filter and define output branches
 r = rdf.Filter(filter_code)  \
        .Define("v_L_1_F", valids[0]) \
-       .Define("v_L_2_N", valids[1]) \
-       .Define("v_L_2_F", valids[2]) \
-       .Define("v_R_1_F", valids[3]) \
-       .Define("v_R_2_N", valids[4]) \
-       .Define("v_R_2_F", valids[5]) \
        .Define("x_L_1_F", xs[0]) \
-       .Define("x_L_2_N", xs[1]) \
-       .Define("x_L_2_F", xs[2]) \
-       .Define("x_R_1_F", xs[3]) \
-       .Define("x_R_2_N", xs[4]) \
-       .Define("x_R_2_F", xs[5]) \
        .Define("y_L_1_F", ys[0]) \
+       .Define("v_L_2_N", valids[1]) \
+       .Define("x_L_2_N", xs[1]) \
        .Define("y_L_2_N", ys[1]) \
+       .Define("v_L_2_F", valids[2]) \
+       .Define("x_L_2_F", xs[2]) \
        .Define("y_L_2_F", ys[2]) \
+       .Define("v_R_1_F", valids[3]) \
+       .Define("x_R_1_F", xs[3]) \
        .Define("y_R_1_F", ys[3]) \
+       .Define("v_R_2_N", valids[4]) \
+       .Define("x_R_2_N", xs[4]) \
        .Define("y_R_2_N", ys[4]) \
+       .Define("v_R_2_F", valids[5]) \
+       .Define("x_R_2_F", xs[5]) \
        .Define("y_R_2_F", ys[5]) \
        .Define("timestamp",    "(unsigned int) (event_info.timestamp - 1444860000)") \
        .Define("run_num",      "(unsigned int) event_info.run_no")                 \
