@@ -340,7 +340,9 @@ r4 = r3.Define("k_th_x_R",        "kinematics.th_x_R") \
        .Define("k_th_y_R_diffNF", "kinematics.th_y_R_F - kinematics.th_y_R_N") \
        .Define("k_vtx_x_diffLR",  "kinematics.vtx_x_R - kinematics.vtx_x_L") \
        .Define("k_vtx_y_diffLR",  "kinematics.vtx_y_R - kinematics.vtx_y_L") \
-       .Define("k_t",             "kinematics.t")
+       .Define("k_t",             "kinematics.t")                            \
+       .Define("k_th",            "kinematics.th")                           \
+       .Define("k_phi",           "kinematics.phi")
 
 # Line 906
 # cut evaluation
@@ -409,14 +411,14 @@ h_timestamp_sel = f4.Histo1D(model, "timestamp");
 
 # Line 1110
 # fill histograms
-noal_sel_models = [
+noal_sel_models = map(ROOT.ROOT.RDF.TH2DModel, [
     ("h_y_L_1_F_vs_x_L_1_F_noal_sel", ";x^{L,1,F};y^{L,1,F}", 100, -3., +3., 300, -30., +30.),
     ("h_y_L_2_N_vs_x_L_2_N_noal_sel", ";x^{L,2,N};y^{L,2,N}", 100, -3., +3., 300, -30., +30.),
     ("h_y_L_2_F_vs_x_L_2_F_noal_sel", ";x^{L,2,F};y^{L,2,F}", 100, -3., +3., 300, -30., +30.),
     ("h_y_R_1_F_vs_x_R_1_F_noal_sel", ";x^{R,1,F};y^{R,1,F}", 100, -3., +3., 300, -30., +30.),
     ("h_y_R_2_N_vs_x_R_2_N_noal_sel", ";x^{R,2,N};y^{R,2,N}", 100, -3., +3., 300, -30., +30.),
     ("h_y_R_2_F_vs_x_R_2_F_noal_sel", ";x^{R,2,F};y^{R,2,F}", 100, -3., +3., 300, -30., +30.)
-]
+])
 
 h_y_L_1_F_vs_x_L_1_F_noal_sel = f4.Histo2D(noal_sel_models[0], "x_L_1_F", "y_L_1_F")
 h_y_L_2_N_vs_x_L_2_N_noal_sel = f4.Histo2D(noal_sel_models[1], "x_L_2_N", "y_L_2_N")
@@ -427,14 +429,14 @@ h_y_R_2_F_vs_x_R_2_F_noal_sel = f4.Histo2D(noal_sel_models[5], "x_R_2_F", "y_R_2
 
 
 # Line 1117
-al_sel_models = [
+al_sel_models = map(ROOT.ROOT.RDF.TH2DModel, [
     ("h_y_L_1_F_vs_x_L_1_F_al_sel", ";x^{L,1,F};y^{L,1,F}", 100, -3., +3., 300, -30., +30.),
     ("h_y_L_2_N_vs_x_L_2_N_al_sel", ";x^{L,2,N};y^{L,2,N}", 100, -3., +3., 300, -30., +30.),
     ("h_y_L_2_F_vs_x_L_2_F_al_sel", ";x^{L,2,F};y^{L,2,F}", 100, -3., +3., 300, -30., +30.),
     ("h_y_R_1_F_vs_x_R_1_F_al_sel", ";x^{R,1,F};y^{R,1,F}", 100, -3., +3., 300, -30., +30.),
     ("h_y_R_2_N_vs_x_R_2_N_al_sel", ";x^{R,2,N};y^{R,2,N}", 100, -3., +3., 300, -30., +30.),
     ("h_y_R_2_F_vs_x_R_2_F_al_sel", ";x^{R,2,F};y^{R,2,F}", 100, -3., +3., 300, -30., +30.)
-]
+])
 
 h_y_L_1_F_vs_x_L_1_F_al_sel = f4.Histo2D(al_sel_models[0], "h_al_x_L_1_F", "h_al_y_L_1_F")
 h_y_L_2_N_vs_x_L_2_N_al_sel = f4.Histo2D(al_sel_models[1], "h_al_x_L_2_N", "h_al_y_L_2_N")
@@ -445,20 +447,33 @@ h_y_R_2_F_vs_x_R_2_F_al_sel = f4.Histo2D(al_sel_models[5], "h_al_x_R_2_F", "h_al
 
 # Line 1157 (k.th_x_R - k.th_x_L)
 #           (k.th_y_R - k.th_y_L)
-th_x_diffLR = f4.Histo1D("k_th_x_diffLR")
-th_y_diffLR = f4.Histo1D("k_th_y_diffLR")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("th_x_diffLR", ";#theta_{x}^{R} - #theta_{x}^{L}", 1000, -500E-6, +500E-6),
+    ("th_y_diffLR", ";#theta_{y}^{R} - #theta_{y}^{L}", 500, -50E-6, +50E-6)
+])
+th_x_diffLR = f4.Histo1D(models[0], "k_th_x_diffLR")
+th_y_diffLR = f4.Histo1D(models[1], "k_th_y_diffLR")
 
 # Line 1160 (k.th_x_L - k.th_x)
 #           (k.th_x_R - k.th_x)
-th_x_diffLF = f4.Histo1D("k_th_x_diffLF")
-th_x_diffRF = f4.Histo1D("k_th_x_diffRF")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("th_x_diffLF", ";#theta_{x}^{L} - #theta_{x}", 400, -200E-6, +200E-6),
+    ("th_x_diffRF", ";#theta_{x}^{R} - #theta_{x}", 400, -200E-6, +200E-6)
+])
+th_x_diffLF = f4.Histo1D(models[0], "k_th_x_diffLF")
+th_x_diffRF = f4.Histo1D(models[1], "k_th_x_diffRF")
 
 # Line 1163 (k.th_x, k.th_x_R - k.th_x_L)
 #           (k.th_y, k.th_y_R - k.th_y_L)
 #           (k.vtx_x, k.th_x_R - k.th_x_L)
-h_th_x_diffLR_vs_th_x  = f4.Histo1D("k_th_x", "k_th_x_diffLR")
-h_th_y_diffLR_vs_th_y  = f4.Histo1D("k_th_y", "k_th_y_diffLR")
-h_th_x_diffLR_vs_vtx_x = f4.Histo1D("k_vtx_x", "k_th_x_diffLR")
+models = map(ROOT.ROOT.RDF.TH2DModel, [
+    ("h_th_x_diffLR_vs_th_x", ";#theta_{x};#theta_{x}^{R} - #theta_{x}^{L}", 100, -300E-6, +300E-6, 120, -120E-6, +120E-6),
+    ("h_th_y_diffLR_vs_th_y", ";#theta_{y};#theta_{y}^{R} - #theta_{y}^{L}", 100, -500E-6, +500E-6, 120, -120E-6, +120E-6),
+    ("h_th_x_diffLR_vs_vtx_x", ";vtx_{x};#theta_{x}^{R} - #theta_{x}^{L}", 100, -300E-3, +300E-3, 120, -120E-6, +120E-6)
+])
+h_th_x_diffLR_vs_th_x  = f4.Histo2D(models[0], "k_th_x", "k_th_x_diffLR")
+h_th_y_diffLR_vs_th_y  = f4.Histo2D(models[1], "k_th_y", "k_th_y_diffLR")
+h_th_x_diffLR_vs_vtx_x = f4.Histo2D(models[2], "k_vtx_x", "k_th_x_diffLR")
 
 # TODO:
 # Line 1168 TProfile
@@ -487,9 +502,14 @@ h_th_x_diffLR_vs_vtx_x = f4.Histo1D("k_vtx_x", "k_th_x_diffLR")
 # Line 1188 (k.th_x_L, k.th_y_L)
 #           (k.th_x_R, k.th_y_R)
 #           (k.th_x, k.th_y)
-h_th_y_L_vs_th_x_L = f4.Histo1D("k_th_x_L", "k_th_y_L")
-h_th_y_R_vs_th_x_R = f4.Histo1D("k_th_x_R", "k_th_y_R")
-h_th_y_vs_th_x     = f4.Histo1D("k_th_x", "k_th_y")
+models = map(ROOT.ROOT.RDF.TH2DModel, [
+    ("h_th_y_L_vs_th_x_L", ";#theta_{x}^{L};#theta_{y}^{L}", 100, -115E-6, +11E-5, 100, 22E-6, +102E-6),
+    ("h_th_y_R_vs_th_x_R", ";#theta_{x}^{R};#theta_{y}^{R}", 100, -125E-6, +12E-5, 100, 27E-6, +102E-6),
+    ("h_th_y_vs_th_x", ";#theta_{x};#theta_{y}", 100, -300E-6, +300E-6, 100, -150E-6, +150E-6)
+])
+h_th_y_L_vs_th_x_L = f4.Histo2D(models[0], "k_th_x_L", "k_th_y_L")
+h_th_y_R_vs_th_x_R = f4.Histo2D(models[1], "k_th_x_R", "k_th_y_R")
+h_th_y_vs_th_x     = f4.Histo2D(models[2], "k_th_x", "k_th_y")
 
 # TODO: TGraph
 # Line 1192
@@ -501,7 +521,9 @@ h_th_y_vs_th_x     = f4.Histo1D("k_th_x", "k_th_y")
 # }
 
 # Line 1199 (k.th_y_R, k.th_y_L)
-h_th_y_L_vs_th_y_R = f4.Histo1D("k_th_y_R", "k_th_y_L")
+model = ROOT.ROOT.RDF.TH2DModel("h_th_y_L_vs_th_y_R", ";#theta_{y}^{R};#theta_{y}^{L}",
+                                 300, -150E-6, +150E-6, 300, -150E-6, +150E-6)
+h_th_y_L_vs_th_y_R = f4.Histo2D(model, "k_th_y_R", "k_th_y_L")
 
 # TODO TGraph
 # if (detailsLevel > 2)
@@ -509,30 +531,49 @@ h_th_y_L_vs_th_y_R = f4.Histo1D("k_th_y_R", "k_th_y_L")
 
 # Line 1203: (k.th_x)
 #            (k.th_y)
-h_th_x     = f4.Histo1D("k_th_x")
-h_th_y     = f4.Histo1D("k_th_y")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+	("h_th_x", ";#theta_{x}", 250, -500E-6, +500E-6),
+	("h_th_y", ";#theta_{y}", 250, -500E-6, +500E-6)
+])
+h_th_x     = f4.Histo1D(models[0], "k_th_x")
+h_th_y     = f4.Histo1D(models[1], "k_th_y")
 
 # Line 1205: (-k.th_y)
-h_th_y_flipped = f4.Histo1D("minus_k_th_y")
+model = ("h_th_y_flipped", ";#theta_{y}", 250, -500E-6, +500E-6)
+h_th_y_flipped = f4.Histo1D(model, "minus_k_th_y")
 
 # Line 1207: (k.th_x_L)
 #            (k.th_x_R)
-h_th_x_L   = f4.Histo1D("k_th_x_L")
-h_th_x_R   = f4.Histo1D("k_th_x_R")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+	("h_th_x_L", ";#theta_{x}^{L}", 250, -500E-6, +500E-6),
+    ("h_th_x_R", ";#theta_{x}^{R}", 250, -500E-6, +500E-6)
+])
+h_th_x_L   = f4.Histo1D(models[0], "k_th_x_L")
+h_th_x_R   = f4.Histo1D(models[1], "k_th_x_R")
 
 # Line 1210: (k.th_y_L)
 #            (k.th_y_R)
-h_th_y_L   = f4.Histo1D("k_th_y_L")
-h_th_y_R   = f4.Histo1D("k_th_y_R")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("h_th_y_L", ";#theta_{y}^{L}", 250, -500E-6, +500E-6),
+    ("h_th_y_R", ";#theta_{y}^{R}", 250, -500E-6, +500E-6)
+])
+h_th_y_L   = f4.Histo1D(models[0], "k_th_y_L")
+h_th_y_R   = f4.Histo1D(models[1], "k_th_y_R")
 
 # Line 1213: (k.th_y_L_F)
 #            (k.th_y_L_N)
 #            (k.th_y_R_N)
 #            (k.th_y_R_F)
-h_th_y_L_F = f4.Histo1D("k_th_y_L_F")
-h_th_y_L_N = f4.Histo1D("k_th_y_L_N")
-h_th_y_R_N = f4.Histo1D("k_th_y_R_N")
-h_th_y_R_F = f4.Histo1D("k_th_y_R_F")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("h_th_y_L_F", ";#theta_{y}^{L_F}", 250, -500E-6, +500E-6),
+    ("h_th_y_L_N", ";#theta_{y}^{L_N}", 250, -500E-6, +500E-6),
+    ("h_th_y_R_N", ";#theta_{y}^{R_N}", 250, -500E-6, +500E-6),
+    ("h_th_y_R_F", ";#theta_{y}^{R_F}", 250, -500E-6, +500E-6)
+])
+h_th_y_L_F = f4.Histo1D(models[0], "k_th_y_L_F")
+h_th_y_L_N = f4.Histo1D(models[1], "k_th_y_L_N")
+h_th_y_R_N = f4.Histo1D(models[2], "k_th_y_R_N")
+h_th_y_R_F = f4.Histo1D(models[3], "k_th_y_R_F")
 
 
 # fill vertex histograms
@@ -540,44 +581,72 @@ h_th_y_R_F = f4.Histo1D("k_th_y_R_F")
 # Line 1220 (k.vtx_x)
 #           (k.vtx_x_L)
 #           (k.vtx_x_R)
-h_vtx_x    = f4.Histo1D("k_vtx_x")
-h_vtx_x_L  = f4.Histo1D("k_vtx_x_L")
-h_vtx_x_R  = f4.Histo1D("k_vtx_x_R")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("h_vtx_x", ";x^{*}", 100, -0.5, +0.5),
+    ("h_vtx_x_L", ";x^{*,L}", 100, -0.5, +0.5),
+    ("h_vtx_x_R", ";x^{*,R}", 100, -0.5, +0.5)
+])
+h_vtx_x    = f4.Histo1D(models[0], "k_vtx_x")
+h_vtx_x_L  = f4.Histo1D(models[1], "k_vtx_x_L")
+h_vtx_x_R  = f4.Histo1D(models[2], "k_vtx_x_R")
 
 # Line 1224 (k.vtx_y)
 #           (k.vtx_y_L)
 #           (k.vtx_y_R)
-h_vtx_y    = f4.Histo1D("k_vtx_y")
-h_vtx_y_L  = f4.Histo1D("k_vtx_y_L")
-h_vtx_y_R  = f4.Histo1D("k_vtx_y_R")
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("h_vtx_y", ";y^{*}", 100, -0.5, +0.5),
+    ("h_vtx_y_L", ";y^{*,L}", 100, -0.5, +0.5),
+    ("h_vtx_y_R", ";y^{*,R}", 100, -0.5, +0.5)
+])
+h_vtx_y    = f4.Histo1D(models[0], "k_vtx_y")
+h_vtx_y_L  = f4.Histo1D(models[1], "k_vtx_y_L")
+h_vtx_y_R  = f4.Histo1D(models[2], "k_vtx_y_R")
 
 # Line 1228:
 #            (k.vtx_x_R, k.vtx_x_L)
 #            (k.vtx_y_R, k.vtx_y_L)
-h_vtx_x_L_vs_vtx_x_R = f4.Histo1D("k_vtx_x_R", "k_vtx_x_L")
-h_vtx_y_L_vs_vtx_y_R = f4.Histo1D("k_vtx_y_R", "k_vtx_y_L")
+models = map(ROOT.ROOT.RDF.TH2DModel, [
+    ("h_vtx_x_L_vs_vtx_x_R", ";x^{*,R};x^{*,L}", 100, -0.5, +0.5, 100, -0.5, +0.5),
+    ("h_vtx_y_L_vs_vtx_y_R", ";y^{*,R};y^{*,L}", 100, -0.5, +0.5, 100, -0.5, +0.5)
+])
+h_vtx_x_L_vs_vtx_x_R = f4.Histo2D(models[0], "k_vtx_x_R", "k_vtx_x_L")
+h_vtx_y_L_vs_vtx_y_R = f4.Histo2D(models[1], "k_vtx_y_R", "k_vtx_y_L")
 
 # Line 1231:
 #            (k.th_x_L, k.vtx_x_L)
 #            (k.th_x_R, k.vtx_x_R)
 #            (k.th_y_L, k.vtx_y_L)
 #            (k.th_y_R, k.vtx_y_R)
-h_vtx_x_L_vs_th_x_L = f4.Histo1D("k_th_x_L", "k_vtx_x_L")
-h_vtx_x_R_vs_th_x_R = f4.Histo1D("k_th_x_R", "k_vtx_x_R")
-h_vtx_y_L_vs_th_y_L = f4.Histo1D("k_th_y_L", "k_vtx_y_L")
-h_vtx_y_R_vs_th_y_R = f4.Histo1D("k_th_y_R", "k_vtx_y_R")
+models = map(ROOT.ROOT.RDF.TH2DModel, [
+    ("h_vtx_x_L_vs_th_x_L", ";#theta_{x}^{L};x^{*,L}", 100, -600E-6, +600E-6, 100, -0.5, +0.5),
+    ("h_vtx_x_R_vs_th_x_R", ";#theta_{x}^{R};x^{*,R}", 100, -600E-6, +600E-6, 100, -0.5, +0.5),
+    ("h_vtx_y_L_vs_th_y_L", ";#theta_{y}^{L};y^{*,L}", 100, -600E-6, +600E-6, 100, -0.5, +0.5),
+    ("h_vtx_y_R_vs_th_y_R", ";#theta_{y}^{R};y^{*,R}", 100, -600E-6, +600E-6, 100, -0.5, +0.5)
+])
+h_vtx_x_L_vs_th_x_L = f4.Histo2D(models[0], "k_th_x_L", "k_vtx_x_L")
+h_vtx_x_R_vs_th_x_R = f4.Histo2D(models[1], "k_th_x_R", "k_vtx_x_R")
+h_vtx_y_L_vs_th_y_L = f4.Histo2D(models[2], "k_th_y_L", "k_vtx_y_L")
+h_vtx_y_R_vs_th_y_R = f4.Histo2D(models[3], "k_th_y_R", "k_vtx_y_R")
 
 # Line 1236:
 #           (k.vtx_x_R - k.vtx_x_L)
 #           (k.vtx_y_R - k.vtx_y_L)
-h_vtx_x_diffLR = f4.Histo1D("k_vtx_x_diffLR");
-h_vtx_y_diffLR = f4.Histo1D("k_vtx_y_diffLR");
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("h_vtx_x_diffLR", ";x^{*,R} - x^{*,L}", 100, -0.5, +0.5),
+    ("h_vtx_y_diffLR", ";y^{*,R} - y^{*,L}", 100, -0.5, +0.5)
+])
+h_vtx_x_diffLR = f4.Histo1D(models[0], "k_vtx_x_diffLR");
+h_vtx_y_diffLR = f4.Histo1D(models[1], "k_vtx_y_diffLR");
 
 # Line 1239:
 #           (k.th_x, k.vtx_x_R - k.vtx_x_L)
 #           (k.th_y, k.vtx_y_R - k.vtx_y_L)
-h_vtx_x_diffLR_vs_th_x = f4.Histo1D("k_th_x", "k_vtx_x_diffLR");
-h_vtx_y_diffLR_vs_th_y = f4.Histo1D("k_th_y", "k_vtx_y_diffLR");
+models = map(ROOT.ROOT.RDF.TH1DModel, [
+    ("h_vtx_x_diffLR", ";x^{*,R} - x^{*,L}", 100, -0.5, +0.5),
+    ("h_vtx_y_diffLR", ";y^{*,R} - y^{*,L}", 100, -0.5, +0.5)
+])
+h_vtx_x_diffLR_vs_th_x = f4.Histo1D(models[0], "k_th_x", "k_vtx_x_diffLR");
+h_vtx_y_diffLR_vs_th_y = f4.Histo1D(models[1], "k_th_y", "k_vtx_y_diffLR");
 
 # TODO TProfile
 #p_vtx_x_diffLR_vs_th_x = f4.Profile1D("k_th_x", "k_vtx_y_diffLR");
@@ -586,8 +655,12 @@ h_vtx_y_diffLR_vs_th_y = f4.Histo1D("k_th_y", "k_vtx_y_diffLR");
 # Line 1245:
 #           (k.vtx_x_R, k.vtx_x_R - k.vtx_x_L)
 #           (k.vtx_y_R, k.vtx_y_R - k.vtx_y_L)
-h_vtx_x_diffLR_vs_vtx_x_R = f4.Histo1D("k_vtx_x_R", "k_vtx_y_diffLR");
-h_vtx_y_diffLR_vs_vtx_y_R = f4.Histo1D("k_vtx_y_R", "k_vtx_y_diffLR");
+models = map(ROOT.ROOT.RDF.TH2DModel,[
+    ("h_vtx_x_diffLR_vs_vtx_x_R", ";x^{*,R};x^{*,R} - x^{*,L}", 100, -0.5, +0.5, 100, -0.5, +0.5),
+    ("h_vtx_y_diffLR_vs_vtx_y_R", ";y^{*,R};y^{*,R} - y^{*,L}", 100, -0.5, +0.5, 100, -0.5, +0.5)
+])
+h_vtx_x_diffLR_vs_vtx_x_R = f4.Histo2D(models[0], "k_vtx_x_R", "k_vtx_y_diffLR");
+h_vtx_y_diffLR_vs_vtx_y_R = f4.Histo2D(models[1], "k_vtx_y_R", "k_vtx_y_diffLR");
 
 # TODO: safe
 # if (safe)
@@ -621,19 +694,15 @@ r7 = f4.Define("correction", "CalculateAcceptanceCorrectionsRDF( th_y_sign, kine
 for bi in binnings:
     bis = binning_setup[bi]
 
-    modelreal = ROOT.TH1D("h_t_Nev_before", ";|t|;events per bin", bis.N_bins, bis.bin_edges)
-    model = ROOT.RDF.TH1DModel(modelreal)
+    model = ROOT.RDF.TH1DModel("h_t_Nev_before", ";|t|;events per bin", bis.N_bins, bis.bin_edges)
 	bh_t_Nev_before[bi] = r7.Histo1D(model, "k_t", "one");
 
-    modelreal = ROOT.TH1D("h_t_before", ";|t|", bis.N_bins, bis.bin_edges)
-    model = ROOT.RDF.TH1DModel(modelreal)
+    model = ROOT.RDF.TH1DModel("h_t_before", ";|t|", bis.N_bins, bis.bin_edges)
 	bh_t_before[bi] = r7.Histo1D(model, "k_t", "one");
 
 
 # Line 1412
-modelreal = ROOT.TH2D("h_th_y_vs_th_x_before", ";#theta_{x};#theta_{y}", 150, -300E-6, +300E-6, 150, -150E-6, +150E-6)
-modelreal.Sumw2()
-model = ROOT.RDF.TH2DModel(modelreal)
+model = ROOT.RDF.TH2DModel("h_th_y_vs_th_x_before", ";#theta_{x};#theta_{y}", 150, -300E-6, +300E-6, 150, -150E-6, +150E-6)
 h_th_y_vs_th_x_before = r7.Histo2D(model, "k_th_x", "k_th_y", "one");
 
 # Line 1414
@@ -644,40 +713,31 @@ f5 = r7.Filter("! correction.skip", "acceptance correction")
 for bi in binnings:
     bis = binning_setup[bi]
 
-    modelreal = ROOT.TH1D("h_t_Nev_after_no_corr", ";|t|;events per bin", bis.N_bins, bis.bin_edges)
-    model = ROOT.RDF.TH1DModel(modelreal)
+    model = ROOT.RDF.TH1DModel("h_t_Nev_after_no_corr", ";|t|;events per bin", bis.N_bins, bis.bin_edges)
     bh_t_Nev_after_no_corr[bi] = f5.Histo1D(model, "k_t", "one");
 
-    modelreal = ROOT.TH1D("h_t_after_no_corr", ";|t|", bis.N_bins, bis.bin_edges)
-    model = ROOT.RDF.TH1DModel(modelreal)
+    model = ROOT.RDF.TH1DModel("h_t_after_no_corr", ";|t|", bis.N_bins, bis.bin_edges)
     bh_t_after_no_corr[bi] = f5.Histo1D(model, "k_t", "one");
 
-    modelreal = ROOT.TH1D("h_t_after", ";|t|", bis.N_bins, bis.bin_edges)
-    model = ROOT.RDF.TH1DModel(modelreal)
+    model = ROOT.RDF.TH1DModel("h_t_after", ";|t|", bis.N_bins, bis.bin_edges)
     bh_t_after[bi] = f5.Histo1D(model, "k_t", "corr");
 
 # Line 1435
-modelreal = ROOT.TH2D("h_th_y_vs_th_x_after", ";#theta_{x};#theta_{y}", 150, -300E-6, +300E-6, 150, -150E-6, +150E-6);
-modelreal.Sumw2()
-model = ROOT.RDF.TH2DModel(modelreal)
+model = ROOT.RDF.TH2DModel("h_th_y_vs_th_x_after", ";#theta_{x};#theta_{y}", 150, -300E-6, +300E-6, 150, -150E-6, +150E-6);
 h_th_y_vs_th_x_after = f5.Histo2D(model, "k_th_x", "k_th_y", "div_corr");
 
 # Line 1435
-modelreal = ROOT.TH2D("h_th_vs_phi_after", ";#phi;#theta", 50, -M_PI, +M_PI, 50, 150E-6, 550E-6);
-modelreal.Sumw2()
-model = ROOT.RDF.TH2DModel(modelreal)
-h_th_vs_phi_after = f5.Histo2D(model, "k_th_x", "k_th_y", "div_corr");
+model = ROOT.RDF.TH2DModel("h_th_vs_phi_after", ";#phi;#theta", 50, -M_PI, +M_PI, 50, 150E-6, 550E-6);
+h_th_vs_phi_after = f5.Histo2D(model, "k_phi", "k_th", "div_corr");
 
 # Line 1441
 # apply normalization
-modelreal = ROOT.TH1D("h_t_normalized", ";|t|",128, 0., 4.)
+model = ROOT.ROOT.RDF.TH1DModel("h_t_normalized", ";|t|",128, 0., 4.)
 bh_t_normalized_ob_1_30_02 = f5.Define("corr_norm", "corr * normalization") \
-                               .Histo1D("k_t", "corr_norm")
+                               .Histo1D(model, "k_t", "corr_norm")
 
 # Line 1445
-modelreal = ROOT.TH2D("h_th_y_vs_th_x_normalized", ";#theta_{x};#theta_{y}", 150, -600E-6, +600E-6, 150, -600E-6, +600E-6);
-modelreal.Sumw2()
-model = ROOT.RDF.TH2DModel(modelreal)
+model = ROOT.RDF.TH2DModel("h_th_y_vs_th_x_normalized", ";#theta_{x};#theta_{y}", 150, -600E-6, +600E-6, 150, -600E-6, +600E-6);
 h_th_y_vs_th_x_normalized = f5.Define("div_corr_norm", "correction.div_corr * normalization") \
                               .Histo2D(model, "k_th_x", "k_th_y", "div_corr_norm");
 
@@ -788,11 +848,11 @@ h_y_R_2_F_vs_x_R_2_F_al_sel.Write();
 ROOT.gDirectory = outF.mkdir("selected - hits");
 ROOT.gDirectory = outF.mkdir("selected - angles");
 
-th_x_diffLR.Write()
-th_y_diffLR.Write()
+th_x_diffLR.Sumw2(); th_x_diffLR.Write()
+th_y_diffLR.Sumw2(); th_y_diffLR.Write()
 
-th_x_diffLF.Write()
-th_x_diffRF.Write()
+th_x_diffLF.Sumw2(); th_x_diffLF.Write()
+th_x_diffRF.Sumw2(); th_x_diffRF.Write()
 
 h_th_x_diffLR_vs_th_x.Write();
 h_th_y_diffLR_vs_th_y.Write();
@@ -835,20 +895,20 @@ h_th_y_L_vs_th_y_R.Draw("colz");
 #g_th_y_L_vs_th_y_R.Draw("p");
 c.Write("canvas_th_y_L_vs_th_y_R");
 
-h_th_x.Write();
-h_th_y.Write();
-h_th_y_flipped.Write();
+h_th_x.SetLineColor(1);         h_th_x.Write();
+h_th_y.SetLineColor(1);         h_th_y.Write();
+h_th_y_flipped.SetLineColor(1); h_th_y_flipped.Write();
 
-h_th_x_L.Write();
-h_th_x_R.Write();
+h_th_x_L.SetLineColor(2); h_th_x_L.Write();
+h_th_x_R.SetLineColor(4); h_th_x_R.Write();
 
-h_th_y_L.Write();
-h_th_y_R.Write();
+h_th_y_L.SetLineColor(2); h_th_y_L.Write();
+h_th_y_R.SetLineColor(4); h_th_y_R.Write();
 
-h_th_y_L_F.Write();
-h_th_y_L_N.Write();
-h_th_y_R_N.Write();
-h_th_y_R_F.Write();
+h_th_y_L_F.SetLineColor(2); h_th_y_L_F.Write();
+h_th_y_L_N.SetLineColor(6); h_th_y_L_N.Write();
+h_th_y_R_N.SetLineColor(4); h_th_y_R_N.Write();
+h_th_y_R_F.SetLineColor(7); h_th_y_R_F.Write();
 
 # TODO TGraph
 # {
@@ -860,13 +920,13 @@ h_th_y_R_F.Write();
 # }
 
 ROOT.gDirectory = outF.mkdir("selected - vertex");
-h_vtx_x.Write();
-h_vtx_x_L.Write();
-h_vtx_x_R.Write();
+h_vtx_x.SetLineColor(1);   h_vtx_x.Write();
+h_vtx_x_L.SetLineColor(2); h_vtx_x_L.Write();
+h_vtx_x_R.SetLineColor(4); h_vtx_x_R.Write();
 
-h_vtx_y.Write();
-h_vtx_y_L.Write();
-h_vtx_y_R.Write();
+h_vtx_y.SetLineColor(1);   h_vtx_y.Write();
+h_vtx_y_L.SetLineColor(2); h_vtx_y_L.Write();
+h_vtx_y_R.SetLineColor(4); h_vtx_y_R.Write();
 
 # # TODO:
 #h_vtx_x_safe.Write();
@@ -880,8 +940,8 @@ h_vtx_x_R_vs_th_x_R.Write();
 h_vtx_y_L_vs_th_y_L.Write();
 h_vtx_y_R_vs_th_y_R.Write();
 
-h_vtx_x_diffLR.Write();
-h_vtx_y_diffLR.Write();
+h_vtx_x_diffLR.Sumw2(); h_vtx_x_diffLR.Write();
+h_vtx_y_diffLR.Sumw2(); h_vtx_y_diffLR.Write();
 
 # TODO
 #h_vtx_x_diffLR_safe.Write();
@@ -1020,9 +1080,9 @@ ROOT.gDirectory = accDir;
 # TODO
 # p_t_ub_div_corr->Write();
 
-# h_th_y_vs_th_x_before.Write();
-# h_th_y_vs_th_x_after.Write();
-# h_th_vs_phi_after.Write();
+h_th_y_vs_th_x_before.Sumw2();  h_th_y_vs_th_x_before.Write();
+h_th_y_vs_th_x_after.Sumw2();   h_th_y_vs_th_x_after.Write();
+h_th_vs_phi_after.Sumw2();      h_th_vs_phi_after.Write();
 
 # g_weight_vs_th_y->Write();
 #
